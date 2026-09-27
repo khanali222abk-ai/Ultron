@@ -25,6 +25,15 @@ jobs:
 
       # Big model/voice files live as attachments on a GitHub Release
       # (tag: assets-v1) instead of in the repo, so we fetch them here.
+      - name: Download sherpa-onnx AAR
+        run: |
+          mkdir -p app/libs
+          aar_name=$(curl -s "https://huggingface.co/api/models/csukuangfj/sherpa-onnx-libs/tree/main/android/aar" \
+            | jq -r '.[].path' | grep '\.aar$' | grep -v static-link | sort -V | tail -n1)
+          echo "Using $aar_name"
+          curl -L -o app/libs/sherpa-onnx.aar \
+            "https://huggingface.co/csukuangfj/sherpa-onnx-libs/resolve/main/$aar_name"
+
       - name: Download Vosk model
         run: |
           mkdir -p app/src/main/assets/model-en-us

@@ -65,7 +65,7 @@ class UltronForegroundService : Service() {
             keywordsPath = filesDir.resolve("kws/keywords.txt").absolutePath,
             onError = { msg -> android.util.Log.e("Ultron", msg) },
         )
-        val llm = ClaudeLlmClient(apiKey = BuildConfig.ANTHROPIC_API_KEY)
+        val llm = GeminiLlmClient(apiKey = BuildConfig.GEMINI_API_KEY)
         val connectivity = NetworkConnectivityWatcher(applicationContext)
 
         controller = VoiceAssistantController(

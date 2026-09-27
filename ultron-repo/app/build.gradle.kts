@@ -16,7 +16,7 @@ android {
 
         // Filled from GitHub Actions secrets at build time (see
         // .github/workflows/build.yml) — never hardcode real keys here.
-        buildConfigField("String", "ANTHROPIC_API_KEY", "\"${System.getenv("ANTHROPIC_API_KEY") ?: ""}\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"${System.getenv("GEMINI_API_KEY") ?: ""}\"")
     }
 
     buildFeatures {

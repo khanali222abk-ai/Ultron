@@ -40,6 +40,11 @@ class UltronForegroundService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification("Waking up…"))
 
+        // Assets bundled in the APK aren't directly usable as filesystem
+        // paths — copy them to internal storage once, on first run.
+        copyAssetDirIfNeeded("tts")
+        copyAssetDirIfNeeded("kws")
+
         // --- Real engines -----------------------------------------------
         // Cloud STT/TTS aren't built yet, so both online and offline slots
         // point at the same on-device engines for now. Swap onlineStt /
@@ -48,14 +53,14 @@ class UltronForegroundService : Service() {
         val voskStt = VoskSttEngine(applicationContext)
         val piperTts = PiperTtsEngine(
             context = applicationContext,
-            modelPath = filesDir.resolve("tts/en_US-ryan-high.onnx").absolutePath,
-            modelConfigPath = filesDir.resolve("tts/en_US-ryan-high.onnx.json").absolutePath,
+            modelPath = filesDir.resolve("tts/en_US-reza_ibrahim-medium.onnx").absolutePath,
+            modelConfigPath = filesDir.resolve("tts/en_US-reza_ibrahim-medium.onnx.json").absolutePath,
         )
         val wakeWord = KwsWakeWordEngine(
             context = applicationContext,
-            encoderPath = filesDir.resolve("kws/encoder.onnx").absolutePath,
-            decoderPath = filesDir.resolve("kws/decoder.onnx").absolutePath,
-            joinerPath = filesDir.resolve("kws/joiner.onnx").absolutePath,
+            encoderPath = filesDir.resolve("kws/encoder-epoch-12-avg-2-chunk-16-left-64.int8.onnx").absolutePath,
+            decoderPath = filesDir.resolve("kws/decoder-epoch-12-avg-2-chunk-16-left-64.onnx").absolutePath,
+            joinerPath = filesDir.resolve("kws/joiner-epoch-12-avg-2-chunk-16-left-64.int8.onnx").absolutePath,
             tokensPath = filesDir.resolve("kws/tokens.txt").absolutePath,
             keywordsPath = filesDir.resolve("kws/keywords.txt").absolutePath,
             onError = { msg -> android.util.Log.e("Ultron", msg) },
@@ -106,6 +111,25 @@ class UltronForegroundService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
+    /** Copies an assets/&lt;name&gt;/ folder to filesDir/&lt;name&gt;/ once —
+     *  needed because assets aren't directly usable as filesystem paths,
+     *  and Vosk/Piper/sherpa-onnx all load models from a real path. */
+    private fun copyAssetDirIfNeeded(dirName: String) {
+        val destDir = java.io.File(filesDir, dirName)
+        val alreadyDone = destDir.exists() && !destDir.list().isNullOrEmpty()
+        if (alreadyDone) return
+
+        destDir.mkdirs()
+        val fileNames = assets.list(dirName) ?: return
+        for (fileName in fileNames) {
+            assets.open("$dirName/$fileName").use { input ->
+                java.io.File(destDir, fileName).outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

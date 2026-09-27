@@ -47,6 +47,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
     implementation("com.alphacephei:vosk-android:0.3.47")
     implementation("net.java.dev.jna:jna:5.13.0@aar")
-    // Check github.com/k2-fsa/sherpa-onnx for the current release tag if this fails to resolve.
-    implementation("com.k2fsa.sherpa.onnx:sherpa-onnx-android:1.10.30")
+    // sherpa-onnx isn't on Maven — its .aar is downloaded into app/libs/
+    // by the "Download sherpa-onnx AAR" workflow step and picked up here.
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
 }

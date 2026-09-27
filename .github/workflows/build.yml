@@ -29,7 +29,7 @@ jobs:
         run: |
           mkdir -p app/src/main/assets/model-en-us
           curl -L -o /tmp/vosk.zip \
-            "https://github.com/${{ github.repository }}/releases/download/assets-v1/vosk-model-small-en-us-0_15.zip"
+            "https://github.com/${{ github.repository }}/releases/download/assets-v1/vosk-model-small-en-us-0.15.zip"
           unzip -o /tmp/vosk.zip -d /tmp/vosk-unzipped
           inner=$(find /tmp/vosk-unzipped -mindepth 1 -maxdepth 1 -type d | head -n1)
           cp -r "$inner"/* app/src/main/assets/model-en-us/
@@ -40,7 +40,7 @@ jobs:
           curl -L -o app/src/main/assets/tts/en_US-reza_ibrahim-medium.onnx \
             "https://github.com/${{ github.repository }}/releases/download/assets-v1/en_US-reza_ibrahim-medium.onnx"
           curl -L -o app/src/main/assets/tts/en_US-reza_ibrahim-medium.onnx.json \
-            "https://github.com/${{ github.repository }}/releases/download/assets-v1/en_US-reza_ibrahim-medium_onnx.json"
+            "https://github.com/${{ github.repository }}/releases/download/assets-v1/en_US-reza_ibrahim-medium.onnx.json"
 
       - name: Build debug APK
         env:

@@ -51,9 +51,13 @@ class UltronForegroundService : Service() {
             modelPath = filesDir.resolve("tts/en_US-ryan-high.onnx").absolutePath,
             modelConfigPath = filesDir.resolve("tts/en_US-ryan-high.onnx.json").absolutePath,
         )
-        val wakeWord = PorcupineWakeWordEngine(
+        val wakeWord = KwsWakeWordEngine(
             context = applicationContext,
-            accessKey = BuildConfig.PICOVOICE_ACCESS_KEY,
+            encoderPath = filesDir.resolve("kws/encoder.onnx").absolutePath,
+            decoderPath = filesDir.resolve("kws/decoder.onnx").absolutePath,
+            joinerPath = filesDir.resolve("kws/joiner.onnx").absolutePath,
+            tokensPath = filesDir.resolve("kws/tokens.txt").absolutePath,
+            keywordsPath = filesDir.resolve("kws/keywords.txt").absolutePath,
             onError = { msg -> android.util.Log.e("Ultron", msg) },
         )
         val llm = ClaudeLlmClient(apiKey = BuildConfig.ANTHROPIC_API_KEY)

@@ -16,7 +16,6 @@ android {
 
         // Filled from GitHub Actions secrets at build time (see
         // .github/workflows/build.yml) — never hardcode real keys here.
-        buildConfigField("String", "PICOVOICE_ACCESS_KEY", "\"${System.getenv("PICOVOICE_ACCESS_KEY") ?: ""}\"")
         buildConfigField("String", "ANTHROPIC_API_KEY", "\"${System.getenv("ANTHROPIC_API_KEY") ?: ""}\"")
     }
 
@@ -48,7 +47,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
     implementation("com.alphacephei:vosk-android:0.3.47")
     implementation("net.java.dev.jna:jna:5.13.0@aar")
-    implementation("ai.picovoice:porcupine-android:3.0.2")
     // Check github.com/k2-fsa/sherpa-onnx for the current release tag if this fails to resolve.
     implementation("com.k2fsa.sherpa.onnx:sherpa-onnx-android:1.10.30")
 }

@@ -1,6 +1,8 @@
 package com.ultron.ui.orb
 
 import androidx.compose.animation.core.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
